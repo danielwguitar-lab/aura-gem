@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The AURA Gem — Powered by UBR AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #00c8b8;
+      --teal-bright: #00f0d8;
+      --gold: #c8902a;
+      --gold-bright: #e8b840;
+      --gold-pale: #f5d98a;
+      --navy: #050d18;
+      --glass: rgba(3,10,20,0.72);
+      --border: rgba(0,200,184,0.14);
+      --gold-border: rgba(200,144,42,0.25);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.72);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    a, button, input, select, textarea { cursor: none !important; }
+
+    /* ── BACKGROUND ── */
+    #bg {
+      position: fixed; top: -10%; left: -10%;
+      width: 120%; height: 120%;
+      background: url('assets/background.png') center / cover no-repeat;
+      z-index: 0; will-change: transform;
+    }
+
+    #bg-v {
+      position: fixed; inset: 0; z-index: 1;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 42%, transparent 18%, rgba(3,8,16,0.55) 100%),
+        linear-gradient(to bottom,
+          rgba(3,8,16,0.22) 0%,
+          rgba(3,8,16,0.10) 20%,
+          rgba(3,8,16,0.52) 58%,
+          rgba(3,8,16,0.92) 80%,
+          rgba(3,8,16,0.98) 100%
+        );
+    }
+
+    #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+
+    /* ── CURSOR ── */
+    #c-dot {
+      position: fixed; z-index: 9999; pointer-events: none;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #fff; transform: translate(-50%,-50%);
+      box-shadow: 0 0 10px 3px var(--teal-bright), 0 0 22px 6px rgba(0,240,216,0.55), 0 0 40px rgba(0,240,216,0.25);
+      transition: width .18s, height .18s;
+    }
+    #c-ring {
+      position: fixed; z-index: 9998; pointer-events: none;
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1.5px solid rgba(0,240,216,0.9);
+      box-shadow: 0 0 8px rgba(0,240,216,0.5), inset 0 0 8px rgba(0,240,216,0.12);
+      transform: translate(-50%,-50%);
+      transition: width .22s, height .22s, border-color .22s, box-shadow .22s;
+    }
+    #c-glow {
+      position: fixed; z-index: 2; pointer-events: none;
+      width: 340px; height: 340px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,240,216,0.11) 0%, rgba(0,200,184,0.04) 45%, transparent 70%);
+      transform: translate(-50%,-50%);
+    }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 56px;
+      transition: background .4s, backdrop-filter .4s, padding .4s, border-color .4s;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      padding: 16px 56px;
+      background: rgba(5,13,24,0.68);
+      backdrop-filter: blur(24px) saturate(1.5);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom-color: var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif; font-size: 15px; letter-spacing: 0.28em;
+      color: var(--gold); text-shadow: 0 0 22px rgba(200,144,42,0.55);
+      flex-shrink: 0;
+    }
+    .nav-tabs { display: flex; gap: 0; list-style: none; }
+    .tab-btn {
+      position: relative; padding: 8px 30px;
+      font-family: 'Raleway', sans-serif; font-size: 11px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(232,245,242,0.48); background: none; border: none;
+      transition: color .3s;
+    }
+    .tab-btn::after {
+      content: ''; position: absolute; bottom: 0; left: 30px; right: 30px;
+      height: 1.5px; background: #ffffff;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .35s cubic-bezier(.16,1,.3,1);
+    }
+    .tab-btn:hover { color: var(--gold); }
+    .tab-btn.active { color: var(--gold-bright); text-shadow: 0 0 18px rgba(232,184,64,0.6); }
+    .tab-btn.active::after { transform: scaleX(1); background: #ffffff; box-shadow: 0 0 8px rgba(255,255,255,0.7); }
+    .nav-spacer { width: 130px; }
+
+    /* ── PANELS ── */
+    .panel {
+      position: relative; z-index: 5;
+      min-height: 100vh;
+      padding-top: 112px;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    /* ── CONTAINERS ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+
+    /* ── SHARED TYPE ── */
+    .label {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 20px;
+    }
+    .label::before { content: ''; width: 20px; height: 1px; background: var(--teal); flex-shrink: 0; }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(62px, 8.5vw, 108px);
+      font-weight: 700; line-height: 1.0;
+      background: linear-gradient(155deg, var(--gold-pale) 10%, var(--gold-bright) 50%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: titleGlow 6s 1s ease-in-out infinite;
+      margin-bottom: 16px;
+    }
+
+    .tagline {
+      font-size: 12px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--muted); font-weight: 300; margin-bottom: 28px;
+    }
+
+    .body-text {
+      font-size: 15px; line-height: 1.92;
+      color: var(--muted); font-weight: 300;
+    }
+
+    .sec-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(28px, 3.5vw, 44px);
+      line-height: 1.2;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(200,144,42,0.3);
+      margin-bottom: 24px;
+    }
+
+    /* ── GLASS CARD ── */
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--gold-border);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      position: relative; overflow: hidden;
+      transition: border-color .3s, transform .4s ease;
+    }
+    .glass::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: translateX(-100%); transition: transform .55s ease;
+    }
+    .glass:hover::before { transform: translateX(0); }
+    .glass:hover { border-color: rgba(200,144,42,.55); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+
+    /* ── BUTTONS ── */
+    .btn-p {
+      position: relative; display: inline-block;
+      padding: 13px 36px; overflow: hidden;
+      border: 1px solid var(--teal);
+      background: rgba(0,200,184,.1); color: var(--teal);
+      font-family: 'Raleway', sans-serif; font-size: 11px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      text-decoration: none;
+      transition: color .35s, box-shadow .35s;
+    }
+    .btn-p::before {
+      content: ''; position: absolute; inset: 0; background: var(--teal);
+      transform: translateX(-101%); transition: transform .4s cubic-bezier(.16,1,.3,1);
+    }
+    .btn-p span { position: relative; z-index: 1; }
+    .btn-p:hover { color: var(--navy); box-shadow: 0 0 40px rgba(0,200,184,.44); }
+    .btn-p:hover::before { transform: translateX(0); }
+
+    .btn-o {
+      display: inline-block; padding: 13px 36px;
+      border: 1px solid rgba(232,245,242,.2); color: rgba(232,245,242,.55);
+      font-family: 'Raleway', sans-serif; font-size: 11px;
+      letter-spacing: 0.24em; text-transform: uppercase; text-decoration: none;
+      transition: border-color .3s, color .3s;
+    }
+    .btn-o:hover { border-color: rgba(232,245,242,.48); color: var(--text); }
+
+    /* ── REVEAL ── */
+    .rv {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .rv.d1 { transition-delay: .1s; }
+    .rv.d2 { transition-delay: .22s; }
+    .rv.d3 { transition-delay: .36s; }
+    .rv.vis { opacity: 1; transform: none; }
+
+    /* ══════════════════════════════════════
+       TAB 1 — THE GEM
+       ══════════════════════════════════════ */
+    .hero-block {
+      text-align: center; display: flex; flex-direction: column;
+      align-items: center; padding: 72px 56px 96px;
+    }
+
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+      margin-top: 12px;
+    }
+    .feat-card { padding: 40px 32px; }
+    .feat-card .rv.d1 { transition-delay: .13s; }
+    .feat-card .rv.d2 { transition-delay: .26s; }
+    .feat-icon { width: 40px; height: 40px; margin-bottom: 24px; }
+    .feat-name {
+      font-family: 'Cinzel', serif; font-size: 18px;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(200,144,42,0.3);
+      margin-bottom: 14px;
+    }
+    .feat-desc {
+      font-size: 13.5px; line-height: 1.88;
+      color: rgba(255,255,255,.72); font-weight: 300;
+    }
+    .feat-n {
+      position: absolute; bottom: 24px; right: 28px;
+      font-family: 'Cinzel', serif; font-size: 58px; font-weight: 700;
+      color: rgba(0,200,184,.055); line-height: 1; pointer-events: none;
+    }
+
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      border: 1px solid var(--border);
+      margin-top: 60px; margin-bottom: 120px;
+    }
+    .stat {
+      padding: 48px 28px; text-align: center;
+      border-right: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      transition: background .3s;
+    }
+    .stat:last-child { border-right: none; }
+    .stat:hover { background: rgba(0,200,184,.05); }
+    .stat-n {
+      display: block; font-family: 'Cinzel', serif;
+      font-size: 42px; font-weight: 700; color: var(--teal);
+      line-height: 1; margin-bottom: 10px;
+      text-shadow: 0 0 28px rgba(0,200,184,.42);
+    }
+    .stat-l {
+      font-size: 10px; letter-spacing: 0.24em;
+      text-transform: uppercase; color: rgba(255,255,255,.50);
+    }
+
+    .scroll-cue {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      margin-top: 44px; opacity: 0;
+      animation: riseIn .8s .6s forwards;
+    }
+    .scroll-line {
+      width: 1px; height: 48px;
+      position: relative; background: rgba(0,200,184,.14); overflow: hidden;
+    }
+    .scroll-line::after {
+      content: ''; position: absolute; top: -100%; left: 0;
+      width: 100%; height: 100%; background: var(--teal);
+      animation: scrollDrop 2s .8s infinite;
+    }
+    .scroll-txt {
+      font-size: 9px; letter-spacing: 0.42em;
+      text-transform: uppercase; color: rgba(255,255,255,.42);
+    }
+
+    /* ══════════════════════════════════════
+       TAB 2 — THE APP
+       ══════════════════════════════════════ */
+    .app-wrap {
+      min-height: calc(100vh - 112px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 60px 56px 80px;
+    }
+    .gem-float {
+      width: 108px; height: 108px; margin-bottom: 44px;
+      animation: gemFloat 5.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 28px rgba(0,200,184,.7));
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 6px 18px; margin-bottom: 28px;
+      border: 1px solid rgba(0,200,184,.4);
+      background: rgba(0,200,184,.08);
+      font-size: 10px; letter-spacing: 0.38em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal); animation: blink 2s ease-in-out infinite;
+    }
+    .app-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(44px, 6.5vw, 84px); font-weight: 700;
+      line-height: 1.0; margin-bottom: 14px;
+      background: linear-gradient(155deg, var(--gold-pale) 10%, var(--gold-bright) 50%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 36px rgba(200,144,42,.4));
+    }
+    .app-sub {
+      font-size: 12px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--muted); font-weight: 300; margin-bottom: 24px;
+    }
+    .app-desc {
+      font-size: 15px; line-height: 1.92; color: var(--muted);
+      font-weight: 300; max-width: 460px; margin: 0 auto 48px;
+    }
+    .email-form { display: flex; gap: 0; max-width: 420px; width: 100%; }
+    .email-in {
+      flex: 1; padding: 14px 20px;
+      background: rgba(5,18,32,.72);
+      border: 1px solid var(--border); border-right: none;
+      color: var(--text); font-family: 'Raleway', sans-serif;
+      font-size: 13px; outline: none;
+      transition: border-color .3s;
+    }
+    .email-in::placeholder { color: rgba(232,245,242,.22); }
+    .email-in:focus { border-color: rgba(0,200,184,.5); }
+    .email-btn {
+      padding: 14px 24px;
+      background: var(--teal); border: 1px solid var(--teal);
+      color: var(--navy); font-family: 'Raleway', sans-serif;
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      font-weight: 600; transition: background .3s, box-shadow .3s;
+    }
+    .email-btn:hover { background: var(--teal-bright); box-shadow: 0 0 28px rgba(0,200,184,.4); }
+    .app-feats { display: flex; gap: 56px; margin-top: 72px; }
+    .app-feat { text-align: center; }
+    .app-feat-icon { width: 30px; height: 30px; margin: 0 auto 12px; opacity: 0.55; }
+    .app-feat-name {
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,.65);
+    }
+
+    /* ══════════════════════════════════════
+       TAB 3 — UBR AI
+       ══════════════════════════════════════ */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: start;
+      padding: 56px 56px 80px;
+    }
+    .quote-card { padding: 44px 40px; }
+    .q-mark {
+      font-family: 'Cinzel', serif; font-size: 96px;
+      color: var(--gold); opacity: .3; line-height: .7;
+      display: block; margin-bottom: 16px;
+    }
+    .q-text {
+      font-family: 'Cinzel', serif; font-size: 17px;
+      line-height: 1.78; color: rgba(255,255,255,.88);
+      font-style: italic; margin-bottom: 22px;
+    }
+    .q-src { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--teal); }
+
+    .vals-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+      padding: 0 56px 120px;
+    }
+    .val-card { padding: 36px 28px; }
+    .val-n {
+      font-family: 'Cinzel', serif; font-size: 10px;
+      letter-spacing: 0.3em; color: var(--gold); margin-bottom: 16px;
+    }
+    .val-title { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold); text-shadow: 0 0 20px rgba(200,144,42,0.3); margin-bottom: 12px; }
+    .val-desc { font-size: 13.5px; line-height: 1.88; color: rgba(255,255,255,.72); font-weight: 300; }
+
+    /* ── FOOTER ── */
+    #footer {
+      position: relative; z-index: 5;
+      padding: 32px 56px;
+      border-top: 1px solid rgba(255,255,255,.05);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .foot-brand {
+      font-family: 'Cinzel', serif; font-size: 12px;
+      letter-spacing: 0.26em; color: rgba(200,144,42,.6);
+    }
+    .foot-copy { font-size: 11px; color: rgba(232,245,242,.2); }
+
+    /* ── KEYFRAMES ── */
+    .luminous-label {
+      color: #ffffff !important;
+      text-shadow:
+        0 0 8px var(--teal-bright),
+        0 0 18px rgba(0,240,216,0.75),
+        0 0 36px rgba(0,240,216,0.45),
+        0 0 70px rgba(0,240,216,0.2);
+      animation: labelPulse 3s ease-in-out infinite;
+      letter-spacing: 0.55em !important;
+    }
+    .luminous-label::before { background: rgba(0,240,216,0.7) !important; box-shadow: 0 0 8px var(--teal-bright); }
+
+    @keyframes labelPulse {
+      0%, 100% {
+        text-shadow:
+          0 0 8px var(--teal-bright),
+          0 0 18px rgba(0,240,216,0.7),
+          0 0 36px rgba(0,240,216,0.4),
+          0 0 70px rgba(0,240,216,0.18);
+      }
+      50% {
+        text-shadow:
+          0 0 12px #fff,
+          0 0 22px var(--teal-bright),
+          0 0 45px rgba(0,240,216,0.85),
+          0 0 90px rgba(0,240,216,0.4),
+          0 0 140px rgba(0,240,216,0.15);
+      }
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollDrop {
+      0%   { top: -100%; opacity: .8; }
+      100% { top: 100%;  opacity: 0;  }
+    }
+    @keyframes titleGlow {
+      0%, 100% { filter: drop-shadow(0 0 40px rgba(200,144,42,.32)); }
+      50%       { filter: drop-shadow(0 0 70px rgba(232,184,64,.65)); }
+    }
+    @keyframes gemFloat {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-18px); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .18; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FX Canvas -->
+  <canvas id="fx"></canvas>
+  <!-- Background -->
+  <div id="bg"></div>
+  <div id="bg-v"></div>
+  <!-- Custom cursor -->
+  <div id="c-dot"></div>
+  <div id="c-ring"></div>
+  <div id="c-glow"></div>
+
+  <!-- ── NAV ── -->
+  <nav id="nav">
+    <div class="nav-logo">✦ AURA GEM</div>
+    <ul class="nav-tabs">
+      <li><button class="tab-btn active" data-tab="gem">The Gem</button></li>
+      <li><button class="tab-btn" data-tab="app">The App</button></li>
+      <li><button class="tab-btn" data-tab="ubr">UBR AI</button></li>
+    </ul>
+    <div class="nav-spacer"></div>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       PANEL 1 — THE GEM
+       ══════════════════════════════════════ -->
+  <section id="panel-gem" class="panel">
+
+    <div class="hero-block">
+      <p class="label luminous-label" style="justify-content:center;margin-bottom:14px">Powered by UBR AI</p>
+      <h1 class="hero-title">The AURA Gem</h1>
+      <p class="tagline">Intelligence · Clarity · Power</p>
+      <p class="body-text" style="text-align:center;max-width:500px;margin-bottom:36px">
+        A new frontier in artificial intelligence. The AURA Gem delivers gemstone-precision clarity to complex data, decisions, and creative challenges — built on UBR AI's breakthrough architecture.
+      </p>
+      <div style="display:flex;gap:16px">
+        <a href="#" class="btn-p"><span>Discover More</span></a>
+        <a href="#" class="btn-o">Watch Demo</a>
+      </div>
+      <div class="scroll-cue">
+        <div class="scroll-line"></div>
+        <span class="scroll-txt">Explore</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="label rv">Capabilities</div>
+      <div class="feat-grid">
+
+        <div class="glass feat-card rv">
+          <div class="feat-icon">
+            <svg viewBox="0 0 40 40" fill="none">
+              <path d="M20 3L36 13V27L20 37L4 27V13Z" fill="rgba(0,200,184,0.12)" stroke="#00c8b8" stroke-width="1"/>
+              <path d="M20 3L36 13L20 20L4 13Z" fill="rgba(0,200,184,0.22)"/>
+              <circle cx="20" cy="20" r="3.5" fill="rgba(0,200,184,0.6)"/>
+            </svg>
+          </div>
+          <h3 class="feat-name">Deep Intelligence</h3>
+          <p class="feat-desc">Multi-layered reasoning that penetrates complexity. AURA processes at depth, extracting precise signal from vast oceans of data — the way a gem filters light into radiance.</p>
+          <span class="feat-n">01</span>
+        </div>
+
+        <div class="glass feat-card rv d1">
+          <div class="feat-icon">
+            <svg viewBox="0 0 40 40" fill="none">
+              <path d="M20 4L34 12V28L20 36L6 28V12Z" fill="rgba(0,200,184,0.1)" stroke="#00c8b8" stroke-width="1"/>
+              <path d="M20 4L34 12L20 20L6 12Z" fill="rgba(0,240,216,0.2)"/>
+              <path d="M6 28L20 20L34 28Z" fill="rgba(0,200,184,0.1)"/>
+            </svg>
+          </div>
+          <h3 class="feat-name">Crystal Clarity</h3>
+          <p class="feat-desc">Zero ambiguity. Every response is faceted — structured, precise, and immediately actionable. AURA doesn't approximate. It illuminates the exact shape of your answer.</p>
+          <span class="feat-n">02</span>
+        </div>
+
+        <div class="glass feat-card rv d2">
+          <div class="feat-icon">
+            <svg viewBox="0 0 40 40" fill="none">
+              <path d="M20 3L36 12L32 30H8L4 12Z" fill="rgba(0,200,184,0.1)" stroke="#00c8b8" stroke-width="1"/>
+              <path d="M20 3L36 12L20 18L4 12Z" fill="rgba(0,200,184,0.24)"/>
+              <path d="M20 18L32 30H8Z" fill="rgba(0,240,200,0.1)"/>
+            </svg>
+          </div>
+          <h3 class="feat-name">Adaptive Power</h3>
+          <p class="feat-desc">The Gem evolves with every interaction. Adaptive architecture learns your context, sharpens with use, and grows more powerful the deeper you venture.</p>
+          <span class="feat-n">03</span>
+        </div>
+
+      </div>
+
+      <div class="stats-bar rv" style="margin-top:64px">
+        <div class="stat">
+          <span class="stat-n" data-target="99.8" data-suffix="%">—</span>
+          <span class="stat-l">Accuracy Rate</span>
+        </div>
+        <div class="stat">
+          <span class="stat-n" data-target="10" data-suffix="M+">—</span>
+          <span class="stat-l">Insights Generated</span>
+        </div>
+        <div class="stat">
+          <span class="stat-n" data-target="50" data-suffix="+">—</span>
+          <span class="stat-l">Languages Supported</span>
+        </div>
+        <div class="stat">
+          <span class="stat-n" data-target="0.08" data-suffix="s">—</span>
+          <span class="stat-l">Avg. Response Time</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:80px"></div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════
+       PANEL 2 — THE APP
+       ══════════════════════════════════════ -->
+  <section id="panel-app" class="panel" style="display:none">
+    <div class="app-wrap">
+
+      <svg class="gem-float" viewBox="0 0 100 100" fill="none">
+        <path d="M50 5L85 28L80 72L50 95L20 72L15 28Z" fill="rgba(0,200,184,0.12)" stroke="#00c8b8" stroke-width="1.5"/>
+        <path d="M50 5L85 28L50 50L15 28Z" fill="rgba(0,200,184,0.24)"/>
+        <path d="M15 28L50 50L20 72Z" fill="rgba(0,200,184,0.08)"/>
+        <path d="M85 28L80 72L50 50Z" fill="rgba(0,240,216,0.11)"/>
+        <path d="M20 72L50 95L80 72L50 50Z" fill="rgba(0,200,184,0.15)"/>
+        <path d="M50 5L62 28L50 50L38 28Z" fill="rgba(255,255,255,0.08)"/>
+        <circle cx="50" cy="50" r="3.5" fill="rgba(0,200,184,0.55)"/>
+      </svg>
+
+      <div class="badge"><span class="badge-dot"></span>In Development</div>
+      <h2 class="app-title">Coming Soon</h2>
+      <p class="app-sub">The AURA Gem App</p>
+      <p class="app-desc">
+        The full power of AURA Gem, distilled into an experience you can carry everywhere. We're building something extraordinary — and we want you to be first through the door.
+      </p>
+
+      <form class="email-form" onsubmit="return handleEmail(event)">
+        <input type="email" class="email-in" id="email-in" placeholder="Your email address" required>
+        <button type="submit" class="email-btn" id="email-btn">Notify Me</button>
+      </form>
+
+      <div class="app-feats">
+        <div class="app-feat">
+          <div class="app-feat-icon">
+            <svg viewBox="0 0 30 30" fill="none">
+              <circle cx="15" cy="15" r="13" stroke="#00c8b8" stroke-width="1" fill="rgba(0,200,184,0.08)"/>
+              <path d="M9 15L13 19L21 11" stroke="#00c8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="app-feat-name">Natural Interface</p>
+        </div>
+        <div class="app-feat">
+          <div class="app-feat-icon">
+            <svg viewBox="0 0 30 30" fill="none">
+              <rect x="3" y="3" width="24" height="24" stroke="#00c8b8" stroke-width="1" fill="rgba(0,200,184,0.08)" rx="2"/>
+              <path d="M8 15L12 9L22 18" stroke="#00c8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="app-feat-name">Real-Time Insights</p>
+        </div>
+        <div class="app-feat">
+          <div class="app-feat-icon">
+            <svg viewBox="0 0 30 30" fill="none">
+              <path d="M15 3L27 9V21L15 27L3 21V9Z" stroke="#00c8b8" stroke-width="1" fill="rgba(0,200,184,0.08)"/>
+              <circle cx="15" cy="15" r="4" stroke="#00c8b8" stroke-width="1" fill="rgba(0,200,184,0.22)"/>
+            </svg>
+          </div>
+          <p class="app-feat-name">Cross-Platform</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       PANEL 3 — UBR AI
+       ══════════════════════════════════════ -->
+  <section id="panel-ubr" class="panel" style="display:none">
+
+    <div class="about-grid container" style="max-width:1200px;margin:0 auto">
+      <div>
+        <p class="label rv">Our Foundation</p>
+        <h2 class="sec-title rv d1">Building the Future<br>of Intelligence</h2>
+        <p class="body-text rv d2" style="margin-bottom:18px">
+          UBR AI is a research-driven artificial intelligence company committed to building systems that don't just compute — they comprehend. Founded on the belief that true intelligence requires depth, precision, and adaptability.
+        </p>
+        <p class="body-text rv d2">
+          From foundational model research to real-world deployments, UBR AI operates at the frontier of what's possible — with the AURA Gem as its most luminous expression yet.
+        </p>
+        <div style="margin-top:36px;display:flex;gap:16px" class="rv d3">
+          <a href="#" class="btn-p"><span>Our Research</span></a>
+          <a href="#" class="btn-o">Contact Us</a>
+        </div>
+      </div>
+
+      <div class="glass quote-card rv d2">
+        <span class="q-mark">"</span>
+        <p class="q-text">Intelligence is not the absence of error — it is the relentless pursuit of ever-greater clarity in the face of boundless complexity. That is the mission of UBR AI.</p>
+        <p class="q-src">UBR AI — Core Principles</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="label rv" style="padding-bottom:24px">Our Values</div>
+      <div class="vals-grid" style="padding-left:0;padding-right:0">
+        <div class="glass val-card rv">
+          <p class="val-n">01</p>
+          <h3 class="val-title">Precision</h3>
+          <p class="val-desc">Every model we train, every system we deploy is held to an uncompromising standard of accuracy. We don't ship uncertainty — we engineer clarity.</p>
+        </div>
+        <div class="glass val-card rv d1">
+          <p class="val-n">02</p>
+          <h3 class="val-title">Innovation</h3>
+          <p class="val-desc">Sitting still is falling behind. UBR AI invests relentlessly in fundamental research, pushing the boundaries of what AI can perceive, reason, and create.</p>
+        </div>
+        <div class="glass val-card rv d2">
+          <p class="val-n">03</p>
+          <h3 class="val-title">Integrity</h3>
+          <p class="val-desc">Intelligence carries responsibility. We build AI that is transparent, accountable, and aligned with human values — because power without ethics is just noise.</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── UBR BANNER STRIP ── -->
+  <div style="position:relative;z-index:5;width:100%;overflow:hidden;">
+    <img src="assets/ubr-banner.png" alt="Unbreakable Resilience — UBR AI" style="width:100%;display:block;opacity:0.88;">
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer id="footer">
+    <div class="foot-brand">✦ AURA GEM</div>
+    <p class="foot-copy">© 2026 UBR AI. All rights reserved.</p>
+  </footer>
+
+  <script>
+    /* ═══════════════════════════════════════
+       CANVAS — PARTICLES & RIPPLES
+       ═══════════════════════════════════════ */
+    const canvas = document.getElementById('fx');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth, H = window.innerHeight;
+    let mX = W/2, mY = H/2;
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', e => { mX = e.clientX; mY = e.clientY; });
+
+    // ── Gem Particle ──
+    class GemP {
+      constructor(boot) { this._boot = boot; this.reset(); }
+      reset() {
+        this.x = Math.random() * W;
+        this.y = this._boot ? Math.random() * H : H + 20;
+        this._boot = false;
+        this.bvx = (Math.random() - .5) * .35;
+        this.bvy = -(Math.random() * .5 + .16);
+        this.vx = this.bvx; this.vy = this.bvy;
+        this.s = Math.random() * 3.2 + 1.1;
+        this.op = 0;
+        this.mop = Math.random() * .52 + .12;
+        this.life = 0;
+        this.ml = Math.random() * 400 + 240;
+        this.ang = Math.random() * Math.PI * 2;
+        this.spin = (Math.random() - .5) * .024;
+        this.hue = Math.floor(Math.random() * 36 + 166);
+        this.lit = Math.floor(Math.random() * 18 + 62);
+      }
+      update() {
+        this.life++; this.ang += this.spin;
+        const fi=42, fo=58;
+        if (this.life < fi) this.op = (this.life/fi) * this.mop;
+        else if (this.life > this.ml - fo) this.op = Math.max(0,(this.ml-this.life)/fo) * this.mop;
+        else this.op = this.mop + Math.sin(this.life*.05)*.04;
+        const dx=this.x-mX, dy=this.y-mY, d=Math.sqrt(dx*dx+dy*dy);
+        if (d < 125 && d > .1) { const f=((125-d)/125)*.24; this.vx+=(dx/d)*f; this.vy+=(dy/d)*f; }
+        this.vx += (this.bvx-this.vx)*.026; this.vy += (this.bvy-this.vy)*.026;
+        this.x += this.vx; this.y += this.vy;
+        if (this.life >= this.ml || this.y < -30 || this.x < -30 || this.x > W+30) this.reset();
+      }
+      draw() {
+        if (this.op <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = this.op;
+        ctx.translate(this.x, this.y); ctx.rotate(this.ang);
+        const s = this.s, c = `hsl(${this.hue},88%,${this.lit}%)`;
+        ctx.shadowBlur = s*5; ctx.shadowColor = c; ctx.fillStyle = c;
+        ctx.beginPath();
+        ctx.moveTo(0,-s*1.1); ctx.lineTo(s*.72,-s*.3); ctx.lineTo(s*.8,s*.2);
+        ctx.lineTo(0,s*1.1); ctx.lineTo(-s*.8,s*.2); ctx.lineTo(-s*.72,-s*.3);
+        ctx.closePath(); ctx.fill();
+        ctx.globalAlpha = this.op*.32; ctx.fillStyle='#fff';
+        ctx.beginPath();
+        ctx.moveTo(0,-s*.88); ctx.lineTo(s*.38,-s*.18);
+        ctx.lineTo(0,s*.04); ctx.lineTo(-s*.38,-s*.18);
+        ctx.closePath(); ctx.fill();
+        ctx.restore();
+      }
+    }
+    const gems = Array.from({length:68},(_,i) => new GemP(i<55));
+
+    // ── Ripple ──
+    const ripples = [];
+    class Ripple {
+      constructor(x,y,delay) {
+        this.x=x; this.y=y;
+        this.r=delay*16; this.maxR=95+delay*32;
+        this.spd=1.9-delay*.22;
+      }
+      update() { this.r += this.spd; }
+      draw() {
+        const op = Math.max(0,.58*(1-this.r/this.maxR));
+        if (op<=0) return;
+        ctx.save(); ctx.globalAlpha=op;
+        ctx.strokeStyle=`rgba(0,200,184,${op})`; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.stroke();
+        ctx.restore();
+      }
+      dead() { return this.r >= this.maxR; }
+    }
+
+    document.addEventListener('click', e => {
+      for (let i=0;i<4;i++) ripples.push(new Ripple(e.clientX,e.clientY,i));
+    });
+
+    function loop() {
+      ctx.clearRect(0,0,W,H);
+      gems.forEach(g => { g.update(); g.draw(); });
+      for (let i=ripples.length-1;i>=0;i--) {
+        ripples[i].update(); ripples[i].draw();
+        if (ripples[i].dead()) ripples.splice(i,1);
+      }
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    /* ═══════════════════════════════════════
+       CURSOR
+       ═══════════════════════════════════════ */
+    const dot=document.getElementById('c-dot');
+    const ring=document.getElementById('c-ring');
+    const glow=document.getElementById('c-glow');
+    let cx=W/2,cy=H/2,rx=cx,ry=cy,gx=cx,gy=cy;
+
+    document.addEventListener('mousemove', e=>{ cx=e.clientX; cy=e.clientY; });
+
+    function animCursor() {
+      dot.style.left=cx+'px'; dot.style.top=cy+'px';
+      rx+=(cx-rx)*.12; ry+=(cy-ry)*.12;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      gx+=(cx-gx)*.055; gy+=(cy-gy)*.055;
+      glow.style.left=gx+'px'; glow.style.top=gy+'px';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+
+    document.querySelectorAll('a,button,.glass,.stat').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        ring.style.width='52px'; ring.style.height='52px';
+        ring.style.borderColor='rgba(255,255,255,1)';
+        ring.style.boxShadow='0 0 14px rgba(0,240,216,0.8), inset 0 0 10px rgba(0,240,216,0.18)';
+      });
+      el.addEventListener('mouseleave', () => {
+        ring.style.width='30px'; ring.style.height='30px';
+        ring.style.borderColor='rgba(0,240,216,0.9)';
+        ring.style.boxShadow='0 0 8px rgba(0,240,216,0.5), inset 0 0 8px rgba(0,240,216,0.12)';
+      });
+    });
+
+    /* ═══════════════════════════════════════
+       PARALLAX BACKGROUND
+       ═══════════════════════════════════════ */
+    const bg=document.getElementById('bg');
+    let tbx=0,tby=0,cbx=0,cby=0;
+    document.addEventListener('mousemove', e=>{
+      tbx=-(e.clientX/W-.5)*24; tby=-(e.clientY/H-.5)*24;
+    });
+    function animBg() {
+      cbx+=(tbx-cbx)*.05; cby+=(tby-cby)*.05;
+      const so=window.scrollY*.08;
+      bg.style.transform=`translate(${cbx}px,${cby-so}px)`;
+      requestAnimationFrame(animBg);
+    }
+    animBg();
+
+    /* ═══════════════════════════════════════
+       NAV SCROLL
+       ═══════════════════════════════════════ */
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    /* ═══════════════════════════════════════
+       TAB SWITCHING
+       ═══════════════════════════════════════ */
+    const panels = {
+      gem: document.getElementById('panel-gem'),
+      app: document.getElementById('panel-app'),
+      ubr: document.getElementById('panel-ubr'),
+    };
+    let activeTab = 'gem';
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        if (tab === activeTab) return;
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const cur = panels[activeTab];
+        const nxt = panels[tab];
+        activeTab = tab;
+
+        cur.style.transition='opacity .28s ease,transform .28s ease';
+        cur.style.opacity='0'; cur.style.transform='translateY(-18px)';
+
+        setTimeout(()=>{
+          cur.style.display='none';
+          cur.style.opacity=''; cur.style.transform='';
+
+          nxt.style.display='block';
+          nxt.style.opacity='0'; nxt.style.transform='translateY(20px)';
+          nxt.style.transition='opacity .4s ease,transform .4s ease';
+
+          requestAnimationFrame(()=>requestAnimationFrame(()=>{
+            nxt.style.opacity='1'; nxt.style.transform='translateY(0)';
+          }));
+          window.scrollTo(0,0);
+          initReveals(nxt);
+        }, 270);
+      });
+    });
+
+    /* ═══════════════════════════════════════
+       SCROLL REVEAL + STAT COUNTER
+       ═══════════════════════════════════════ */
+    function initReveals(root) {
+      root = root || document;
+      const obs = new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('vis');
+          entry.target.querySelectorAll('.stat-n[data-target]').forEach(el=>{
+            if (!el.dataset.counted) { el.dataset.counted='1'; countUp(el); }
+          });
+          obs.unobserve(entry.target);
+        });
+      },{threshold:.18});
+      root.querySelectorAll('.rv').forEach(el=>{ el.classList.remove('vis'); obs.observe(el); });
+    }
+    initReveals(document);
+
+    function countUp(el) {
+      const target=parseFloat(el.dataset.target), suf=el.dataset.suffix||'';
+      const isSmall=target<1, dur=2000, t0=performance.now();
+      (function tick(now){
+        const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,3), v=target*e;
+        el.textContent=(isSmall?v.toFixed(2):Number.isInteger(target)?Math.floor(v):v.toFixed(1))+suf;
+        if(p<1) requestAnimationFrame(tick);
+        else el.textContent=(isSmall?target.toFixed(2):target)+suf;
+      })(t0);
+    }
+
+    /* ═══════════════════════════════════════
+       EMAIL FORM
+       ═══════════════════════════════════════ */
+    function handleEmail(e) {
+      e.preventDefault();
+      const btn=document.getElementById('email-btn');
+      const inp=document.getElementById('email-in');
+      btn.textContent="You're In ✦";
+      btn.style.background='rgba(0,200,184,0.18)';
+      btn.style.color='var(--teal)';
+      btn.style.border='1px solid var(--teal)';
+      inp.value=''; inp.placeholder="We'll be in touch!";
+      return false;
+    }
+  </script>
+
+</body>
+</html>

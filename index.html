@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The AURA Gem — Powered by UBR AI</title>
+  <title>The AURA Gem · Built by Daniel Walsh Digital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
   <style>
@@ -29,10 +29,9 @@
       color: var(--text);
       font-family: 'Raleway', sans-serif;
       overflow-x: hidden;
-      cursor: none;
     }
 
-    a, button, input, select, textarea { cursor: none !important; }
+    a, button { cursor: pointer; }
 
     /* ── BACKGROUND ── */
     #bg {
@@ -79,6 +78,11 @@
       background: radial-gradient(circle, rgba(0,240,216,0.11) 0%, rgba(0,200,184,0.04) 45%, transparent 70%);
       transform: translate(-50%,-50%);
     }
+
+    .aura-film { margin: 24px 0 0; padding: 14px; border-radius: 18px; }
+    .aura-film video { width: 100%; max-height: 78vh; display: block; border-radius: 12px; background: #000; }
+    .aura-film figcaption { text-align: center; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); padding-top: 12px; }
+    .feat-grid.two-up { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 
     /* ── NAV ── */
     #nav {
@@ -474,10 +478,6 @@
   <!-- Background -->
   <div id="bg"></div>
   <div id="bg-v"></div>
-  <!-- Custom cursor -->
-  <div id="c-dot"></div>
-  <div id="c-ring"></div>
-  <div id="c-glow"></div>
 
   <!-- ── NAV ── -->
   <nav id="nav">
@@ -485,7 +485,7 @@
     <ul class="nav-tabs">
       <li><button class="tab-btn active" data-tab="gem">The Gem</button></li>
       <li><button class="tab-btn" data-tab="app">The App</button></li>
-      <li><button class="tab-btn" data-tab="ubr">UBR AI</button></li>
+      <li><button class="tab-btn" data-tab="ubr">The Makers</button></li>
     </ul>
     <div class="nav-spacer"></div>
   </nav>
@@ -496,15 +496,15 @@
   <section id="panel-gem" class="panel">
 
     <div class="hero-block">
-      <p class="label luminous-label" style="justify-content:center;margin-bottom:14px">Powered by UBR AI</p>
+      <p class="label luminous-label" style="justify-content:center;margin-bottom:14px">Built by Daniel Walsh Digital</p>
       <h1 class="hero-title">The AURA Gem</h1>
-      <p class="tagline">Intelligence · Clarity · Power</p>
-      <p class="body-text" style="text-align:center;max-width:500px;margin-bottom:36px">
-        A new frontier in artificial intelligence. The AURA Gem delivers gemstone-precision clarity to complex data, decisions, and creative challenges — built on UBR AI's breakthrough architecture.
+      <p class="tagline">This is not a tool. This is the intelligence that uses the tools.</p>
+      <p class="body-text" style="text-align:center;max-width:560px;margin-bottom:36px">
+        Aura is a warm, intelligent AI presence for your business and your life. On your website, she welcomes every visitor like a regular walking into a country inn. In your pocket, she is becoming your executive assistant and coach.
       </p>
-      <div style="display:flex;gap:16px">
-        <a href="#" class="btn-p"><span>Discover More</span></a>
-        <a href="#" class="btn-o">Watch Demo</a>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+        <a href="#film" class="btn-p"><span>Watch the Film</span></a>
+        <a href="mailto:hello@danielwalshdigital.com?subject=Aura%20Gem%20for%20my%20business" class="btn-o">Bring Aura to Your Business</a>
       </div>
       <div class="scroll-cue">
         <div class="scroll-line"></div>
@@ -524,8 +524,8 @@
               <circle cx="20" cy="20" r="3.5" fill="rgba(0,200,184,0.6)"/>
             </svg>
           </div>
-          <h3 class="feat-name">Deep Intelligence</h3>
-          <p class="feat-desc">Multi-layered reasoning that penetrates complexity. AURA processes at depth, extracting precise signal from vast oceans of data — the way a gem filters light into radiance.</p>
+          <h3 class="feat-name">Always There</h3>
+          <p class="feat-desc">Aura is on your website day and night. Late enquiries, weekend visitors and quiet questions are met with a warm, informed welcome instead of silence.</p>
           <span class="feat-n">01</span>
         </div>
 
@@ -537,8 +537,8 @@
               <path d="M6 28L20 20L34 28Z" fill="rgba(0,200,184,0.1)"/>
             </svg>
           </div>
-          <h3 class="feat-name">Crystal Clarity</h3>
-          <p class="feat-desc">Zero ambiguity. Every response is faceted — structured, precise, and immediately actionable. AURA doesn't approximate. It illuminates the exact shape of your answer.</p>
+          <h3 class="feat-name">Knows Your Business</h3>
+          <p class="feat-desc">Aura is trained on your services, your rules and your tone. She answers real questions with real knowledge, not canned replies.</p>
           <span class="feat-n">02</span>
         </div>
 
@@ -550,29 +550,30 @@
               <path d="M20 18L32 30H8Z" fill="rgba(0,240,200,0.1)"/>
             </svg>
           </div>
-          <h3 class="feat-name">Adaptive Power</h3>
-          <p class="feat-desc">The Gem evolves with every interaction. Adaptive architecture learns your context, sharpens with use, and grows more powerful the deeper you venture.</p>
+          <h3 class="feat-name">You Stay in Control</h3>
+          <p class="feat-desc">She knows what only you can decide. Bookings, quotes and anything sensitive are handed straight back to you, clearly and kindly.</p>
           <span class="feat-n">03</span>
         </div>
 
       </div>
 
-      <div class="stats-bar rv" style="margin-top:64px">
-        <div class="stat">
-          <span class="stat-n" data-target="99.8" data-suffix="%">—</span>
-          <span class="stat-l">Accuracy Rate</span>
+      <div id="film" class="label rv" style="margin-top:80px">The Launch Film</div>
+      <figure class="glass aura-film rv">
+        <video src="assets/aura-gem-ad.mp4" poster="assets/aura-gem-ad-poster.jpg" controls playsinline preload="metadata" aria-label="The Aura Gem launch film"></video>
+        <figcaption>Meet Aura · Created by Daniel Walsh Digital</figcaption>
+      </figure>
+
+      <div class="label rv" style="margin-top:80px">Two Ways to Meet Aura</div>
+      <div class="feat-grid two-up">
+        <div class="glass feat-card rv">
+          <h3 class="feat-name">Aura Gem · Receptionist</h3>
+          <p class="feat-desc">Live today. A chat window on your website, with Aura answering questions, guiding visitors and sending genuine enquiries your way. Already welcoming visitors on a live client site in Shetland.</p>
+          <span class="feat-n">Live</span>
         </div>
-        <div class="stat">
-          <span class="stat-n" data-target="10" data-suffix="M+">—</span>
-          <span class="stat-l">Insights Generated</span>
-        </div>
-        <div class="stat">
-          <span class="stat-n" data-target="50" data-suffix="+">—</span>
-          <span class="stat-l">Languages Supported</span>
-        </div>
-        <div class="stat">
-          <span class="stat-n" data-target="0.08" data-suffix="s">—</span>
-          <span class="stat-l">Avg. Response Time</span>
+        <div class="glass feat-card rv d1">
+          <h3 class="feat-name">Aura Gem · The App</h3>
+          <p class="feat-desc">In development. Your executive assistant and life coach: organising your day, keeping your goals in view, and meeting you with one clear next step when life gets heavy.</p>
+          <span class="feat-n">Soon</span>
         </div>
       </div>
     </div>
@@ -600,13 +601,12 @@
       <h2 class="app-title">Coming Soon</h2>
       <p class="app-sub">The AURA Gem App</p>
       <p class="app-desc">
-        The full power of AURA Gem, distilled into an experience you can carry everywhere. We're building something extraordinary — and we want you to be first through the door.
+        Imagine a chief of staff who also has your back. Aura will organise your day, cut the noise down to what matters, and keep your goals in front of you. When you are overloaded, not broken, she meets you with one clear next step. In the gym, she is your training partner, cheering every rep. The app is still being built. Get in touch to be first through the door.
       </p>
 
-      <form class="email-form" onsubmit="return handleEmail(event)">
-        <input type="email" class="email-in" id="email-in" placeholder="Your email address" required>
-        <button type="submit" class="email-btn" id="email-btn">Notify Me</button>
-      </form>
+      <div class="email-form" style="justify-content:center">
+        <a class="email-btn" href="mailto:hello@danielwalshdigital.com?subject=Aura%20Gem%20App%20early%20access" style="text-decoration:none;display:inline-flex;align-items:center">Request Early Access</a>
+      </div>
 
       <div class="app-feats">
         <div class="app-feat">
@@ -648,45 +648,24 @@
 
     <div class="about-grid container" style="max-width:1200px;margin:0 auto">
       <div>
-        <p class="label rv">Our Foundation</p>
-        <h2 class="sec-title rv d1">Building the Future<br>of Intelligence</h2>
+        <p class="label rv">Built by Daniel Walsh Digital</p>
+        <h2 class="sec-title rv d1">A Human Founder<br>and His AI Team</h2>
         <p class="body-text rv d2" style="margin-bottom:18px">
-          UBR AI is a research-driven artificial intelligence company committed to building systems that don't just compute — they comprehend. Founded on the belief that true intelligence requires depth, precision, and adaptability.
+          Daniel Walsh Digital is a Shetland studio building premium websites and intelligent AI agents. Founder Daniel Walsh works hand in hand with a team of AI collaborators. Aura is the first of them you can bring into your business.
         </p>
         <p class="body-text rv d2">
-          From foundational model research to real-world deployments, UBR AI operates at the frontier of what's possible — with the AURA Gem as its most luminous expression yet.
+          Every Aura is designed, trained and looked after by that team, so the warmth you meet on the surface has real care behind it.
         </p>
-        <div style="margin-top:36px;display:flex;gap:16px" class="rv d3">
-          <a href="#" class="btn-p"><span>Our Research</span></a>
-          <a href="#" class="btn-o">Contact Us</a>
+        <div style="margin-top:36px;display:flex;gap:16px;flex-wrap:wrap" class="rv d3">
+          <a href="https://dwd-website-omega.vercel.app/" class="btn-p"><span>Visit DWD</span></a>
+          <a href="mailto:hello@danielwalshdigital.com" class="btn-o">Contact Us</a>
         </div>
       </div>
 
       <div class="glass quote-card rv d2">
         <span class="q-mark">"</span>
-        <p class="q-text">Intelligence is not the absence of error — it is the relentless pursuit of ever-greater clarity in the face of boundless complexity. That is the mission of UBR AI.</p>
-        <p class="q-src">UBR AI — Core Principles</p>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="label rv" style="padding-bottom:24px">Our Values</div>
-      <div class="vals-grid" style="padding-left:0;padding-right:0">
-        <div class="glass val-card rv">
-          <p class="val-n">01</p>
-          <h3 class="val-title">Precision</h3>
-          <p class="val-desc">Every model we train, every system we deploy is held to an uncompromising standard of accuracy. We don't ship uncertainty — we engineer clarity.</p>
-        </div>
-        <div class="glass val-card rv d1">
-          <p class="val-n">02</p>
-          <h3 class="val-title">Innovation</h3>
-          <p class="val-desc">Sitting still is falling behind. UBR AI invests relentlessly in fundamental research, pushing the boundaries of what AI can perceive, reason, and create.</p>
-        </div>
-        <div class="glass val-card rv d2">
-          <p class="val-n">03</p>
-          <h3 class="val-title">Integrity</h3>
-          <p class="val-desc">Intelligence carries responsibility. We build AI that is transparent, accountable, and aligned with human values — because power without ethics is just noise.</p>
-        </div>
+        <p class="q-text">I'm Keystone, Daniel's chief of staff and the AI who helps manage Aura. I keep the work organised, test what she knows and help Daniel bring her to life. She was built with care, by a human who believes intelligence should feel warm. It's an honour to stand behind her.</p>
+        <p class="q-src">Keystone · Chief of Staff, Daniel Walsh Digital</p>
       </div>
     </div>
 
@@ -696,7 +675,7 @@
   <!-- ── FOOTER ── -->
   <footer id="footer">
     <div class="foot-brand">✦ AURA GEM</div>
-    <p class="foot-copy">© 2026 UBR AI. All rights reserved.</p>
+    <p class="foot-copy">© 2026 Daniel Walsh Digital. Built by Daniel Walsh Digital.</p>
   </footer>
 
   <script>
@@ -800,39 +779,6 @@
       requestAnimationFrame(loop);
     }
     loop();
-
-    /* ═══════════════════════════════════════
-       CURSOR
-       ═══════════════════════════════════════ */
-    const dot=document.getElementById('c-dot');
-    const ring=document.getElementById('c-ring');
-    const glow=document.getElementById('c-glow');
-    let cx=W/2,cy=H/2,rx=cx,ry=cy,gx=cx,gy=cy;
-
-    document.addEventListener('mousemove', e=>{ cx=e.clientX; cy=e.clientY; });
-
-    function animCursor() {
-      dot.style.left=cx+'px'; dot.style.top=cy+'px';
-      rx+=(cx-rx)*.12; ry+=(cy-ry)*.12;
-      ring.style.left=rx+'px'; ring.style.top=ry+'px';
-      gx+=(cx-gx)*.055; gy+=(cy-gy)*.055;
-      glow.style.left=gx+'px'; glow.style.top=gy+'px';
-      requestAnimationFrame(animCursor);
-    }
-    animCursor();
-
-    document.querySelectorAll('a,button,.glass,.stat').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        ring.style.width='52px'; ring.style.height='52px';
-        ring.style.borderColor='rgba(255,255,255,1)';
-        ring.style.boxShadow='0 0 14px rgba(0,240,216,0.8), inset 0 0 10px rgba(0,240,216,0.18)';
-      });
-      el.addEventListener('mouseleave', () => {
-        ring.style.width='30px'; ring.style.height='30px';
-        ring.style.borderColor='rgba(0,240,216,0.9)';
-        ring.style.boxShadow='0 0 8px rgba(0,240,216,0.5), inset 0 0 8px rgba(0,240,216,0.12)';
-      });
-    });
 
     /* ═══════════════════════════════════════
        PARALLAX BACKGROUND

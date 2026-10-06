@@ -469,6 +469,29 @@
       0%, 100% { opacity: 1; }
       50%       { opacity: .18; }
     }
+
+    /* ── READABILITY PASS (6 Oct) ── */
+    .nav-logo { font-size: 19px !important; }
+    .tab-btn { font-size: 20px !important; padding: 10px 26px !important; color: rgba(240,250,248,.72) !important; }
+    .tab-btn.active, .tab-btn:hover { color: #fff !important; }
+    .label { font-size: 15px !important; letter-spacing: .26em !important; color: rgba(255,236,200,.95) !important;
+      display: inline-flex !important; padding: 10px 26px 10px 18px; border-radius: 4px;
+      background: linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(20,22,26,.6) 55%, rgba(60,60,60,.18) 85%, transparent 100%);
+      box-shadow: 0 8px 28px rgba(0,0,0,.45); }
+    .tagline { font-size: 18px !important; color: rgba(255,240,210,.95) !important; }
+    .body-text, .app-desc, .val-desc { font-size: 18px !important; line-height: 1.75 !important; color: rgba(242,250,248,.92) !important; }
+    .feat-name, .val-title { font-size: 25px !important; color: #fff !important; }
+    .feat-desc { font-size: 17px !important; line-height: 1.7 !important; color: rgba(242,250,248,.9) !important; }
+    .q-text { font-size: 21px !important; color: rgba(245,250,248,.95) !important; }
+    .q-src, .aura-film figcaption, .foot-copy, .app-sub, .badge, .app-feat-name, .scroll-txt { font-size: 14px !important; }
+    .btn-p, .btn-o, .email-btn { font-size: 14px !important; }
+    @media (max-width: 760px) {
+      .tab-btn { font-size: 14px !important; padding: 8px 10px !important; letter-spacing: .1em !important; }
+      .nav-logo { font-size: 15px !important; }
+      .body-text, .app-desc, .val-desc, .feat-desc { font-size: 16.5px !important; }
+      .feat-name { font-size: 22px !important; }
+      .label { font-size: 13px !important; }
+    }
   </style>
 </head>
 <body>
